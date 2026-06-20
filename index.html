@@ -1,0 +1,985 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title> Dr.Cure </title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css" />
+<style>
+  :root {
+    --teal: #ff90e9;
+    --teal-dark: #ec65cc;
+    --teal-dim: rgba(0,201,167,0.12);
+    --teal-text: #003D34;
+    --bg: #0B1120;
+    --bg-card: #111827;
+    --bg-card2: #1a2336;
+    --bg-input: #1e2d42;
+    --border: rgba(255,255,255,0.08);
+    --border-teal: rgba(0,201,167,0.35);
+    --text: #F0F4F8;
+    --text-dim: #8899AA;
+    --text-dimmer: #5a6a7a;
+    --amber: #F5A623;
+    --amber-dim: rgba(245,166,35,0.12);
+    --coral: #FF6B6B;
+    --coral-dim: rgba(255,107,107,0.12);
+    --green: #4ADE80;
+    --green-dim: rgba(74,222,128,0.12);
+    --radius: 10px;
+    --radius-lg: 14px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { font-size: 16px; scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(11,17,32,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 0.5px solid var(--border);
+    padding: 0 24px;
+    height: 56px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+
+  .logo {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700; font-size: 18px; color: var(--text);
+    display: flex; align-items: center; gap: 10px;
+  }
+
+  .logo-icon {
+    width: 32px; height: 32px; border-radius: 8px;
+    background: var(--teal);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--teal-text);
+    font-size: 16px;
+  }
+
+  .logo-sub {
+    font-size: 12px; font-weight: 400; color: var(--text-dim);
+    font-family: 'Inter', sans-serif; margin-left: 2px;
+  }
+
+  .header-right { display: flex; align-items: center; gap: 14px; }
+
+  .live-pill {
+    display: flex; align-items: center; gap: 6px;
+    background: var(--teal-dim);
+    border: 0.5px solid var(--border-teal);
+    border-radius: 20px; padding: 4px 12px;
+    font-size: 11px; font-weight: 600; color: var(--teal);
+    letter-spacing: 0.06em; text-transform: uppercase;
+  }
+
+  .live-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--teal);
+    animation: blink 1.4s infinite;
+  }
+
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+  #clock {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 13px; font-weight: 500; color: var(--text-dim);
+    min-width: 72px; text-align: right;
+  }
+
+  /* ── TABS ── */
+  .tabs {
+    display: flex; background: var(--bg-card);
+    border-bottom: 0.5px solid var(--border);
+  }
+
+  .tab-btn {
+    flex: 1; padding: 14px 0;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 13px; font-weight: 500; color: var(--text-dim);
+    background: none; border: none; border-bottom: 2px solid transparent;
+    cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 7px;
+    transition: color 0.15s, border-color 0.15s, background 0.15s;
+  }
+
+  .tab-btn i { font-size: 16px; }
+  .tab-btn:hover { color: var(--text); background: rgba(255,255,255,0.03); }
+  .tab-btn.active { color: var(--teal); border-bottom-color: var(--teal); background: rgba(0,201,167,0.04); }
+
+  /* ── PANELS ── */
+  .panel { display: none; padding: 20px 24px; }
+  .panel.active { display: block; }
+
+  /* ── STAT ROW ── */
+  .stats-row {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  .stat-card {
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    text-align: center;
+  }
+
+  .stat-card .s-val {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 28px; font-weight: 700; color: var(--text);
+    line-height: 1; letter-spacing: -1px;
+  }
+
+  .stat-card .s-lbl {
+    font-size: 11px; color: var(--text-dim);
+    margin-top: 5px; letter-spacing: 0.04em;
+  }
+
+  .stat-card.accent-teal .s-val { color: var(--teal); }
+  .stat-card.accent-amber .s-val { color: var(--amber); }
+
+  /* ── MAIN GRID ── */
+  .rx-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+    margin-bottom: 20px;
+  }
+
+  /* ── CARDS ── */
+  .card {
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 18px;
+  }
+
+  .card-label {
+    font-size: 10px; font-weight: 600; letter-spacing: 0.1em;
+    color: var(--text-dimmer); text-transform: uppercase; margin-bottom: 14px;
+  }
+
+  /* ── SERVING DISPLAY ── */
+  .serving-display {
+    display: flex; align-items: baseline; gap: 4px;
+    margin-bottom: 4px;
+  }
+
+  .serving-prefix {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 28px; font-weight: 500; color: var(--text-dim);
+  }
+
+  .serving-num {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 72px; font-weight: 700; color: var(--text);
+    line-height: 1; letter-spacing: -4px;
+    transition: color 0.3s;
+  }
+
+  .serving-num.flash { color: var(--teal); }
+
+  .serving-name {
+    font-size: 13px; color: var(--text-dim); margin-bottom: 14px;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+
+  /* ── CALL BTN ── */
+  .call-btn {
+    width: 100%; padding: 13px;
+    background: var(--teal); color: var(--teal-text);
+    border: none; border-radius: var(--radius);
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 15px; font-weight: 600;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    transition: background 0.15s, transform 0.1s;
+  }
+
+  .call-btn:hover:not(:disabled) { background: var(--teal-dark); }
+  .call-btn:active:not(:disabled) { transform: scale(0.98); }
+  .call-btn:disabled {
+    background: var(--bg-input); color: var(--text-dimmer);
+    cursor: not-allowed;
+  }
+
+  .call-btn i { font-size: 18px; }
+
+  /* ── FORM ELEMENTS ── */
+  .form-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
+  .form-group:last-child { margin-bottom: 0; }
+
+  .form-label {
+    font-size: 11px; font-weight: 500; color: var(--text-dim);
+    letter-spacing: 0.05em; text-transform: uppercase;
+  }
+
+  input[type="text"], input[type="number"], select {
+    background: var(--bg-input);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    padding: 10px 13px;
+    width: 100%;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+
+  input[type="text"]:focus,
+  input[type="number"]:focus,
+  select:focus {
+    border-color: var(--teal);
+  }
+
+  input[type="text"]::placeholder { color: var(--text-dimmer); }
+
+  select { cursor: pointer; }
+  select option { background: var(--bg-card2); }
+
+  .slider-row {
+    display: flex; align-items: center; gap: 10px;
+  }
+
+  input[type="range"] {
+    flex: 1; height: 4px; cursor: pointer;
+    -webkit-appearance: none;
+    background: var(--bg-input);
+    border-radius: 2px;
+    outline: none;
+  }
+
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 16px; height: 16px; border-radius: 50%;
+    background: var(--teal); cursor: pointer;
+    border: 2px solid var(--bg-card);
+  }
+
+  .slider-val {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 15px; font-weight: 600; color: var(--text);
+    min-width: 28px; text-align: right;
+  }
+
+  .slider-unit { font-size: 12px; color: var(--text-dim); }
+
+  /* ── ADD BTN ── */
+  .add-btn {
+    width: 100%; padding: 10px;
+    background: rgba(59,130,246,0.12);
+    border: 0.5px solid rgba(59,130,246,0.3);
+    border-radius: var(--radius);
+    color: #60A5FA;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 14px; font-weight: 500;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+    transition: opacity 0.15s, background 0.15s;
+  }
+
+  .add-btn:hover { background: rgba(59,130,246,0.2); }
+  .add-btn i { font-size: 16px; }
+
+  /* ── QUEUE TABLE ── */
+  .section-label {
+    font-size: 10px; font-weight: 600; letter-spacing: 0.1em;
+    color: var(--text-dimmer); text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  .queue-wrap {
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+  }
+
+  .queue-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+
+  .queue-table th {
+    background: var(--bg-card2);
+    padding: 10px 14px;
+    text-align: left;
+    font-size: 10px; font-weight: 600; color: var(--text-dimmer);
+    letter-spacing: 0.08em; text-transform: uppercase;
+    border-bottom: 0.5px solid var(--border);
+  }
+
+  .queue-table td {
+    padding: 11px 14px;
+    border-bottom: 0.5px solid var(--border);
+    color: var(--text); vertical-align: middle;
+  }
+
+  .queue-table tr:last-child td { border-bottom: none; }
+  .queue-table tr.row-current td { background: rgba(0,201,167,0.06); }
+  .queue-table tr.row-done td { opacity: 0.5; }
+
+  .token-badge {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700; font-size: 13px;
+    padding: 3px 9px; border-radius: 6px;
+    display: inline-block; letter-spacing: 0.5px;
+  }
+
+  .b-current { background: var(--teal); color: var(--teal-text); }
+  .b-waiting { background: var(--bg-input); color: var(--text-dim); }
+  .b-done { background: var(--green-dim); color: var(--green); }
+
+  .chip {
+    font-size: 11px; font-weight: 500; padding: 3px 9px;
+    border-radius: 20px; white-space: nowrap;
+  }
+
+  .chip-in { background: var(--teal-dim); color: var(--teal); }
+  .chip-wait { background: var(--bg-input); color: var(--text-dim); }
+  .chip-done { background: var(--green-dim); color: var(--green); }
+
+  .empty-state {
+    text-align: center; padding: 28px 0;
+    color: var(--text-dimmer); font-size: 13px;
+  }
+
+  .empty-state i {
+    font-size: 28px; display: block; margin-bottom: 8px; opacity: 0.4;
+  }
+
+  /* ── PATIENT PANEL ── */
+  .pov-row {
+    display: flex; align-items: center; gap: 10px; margin-bottom: 18px;
+  }
+
+  .pov-lbl { font-size: 12px; color: var(--text-dim); white-space: nowrap; }
+
+  .waiting-hero {
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 28px 20px;
+    text-align: center;
+    margin-bottom: 16px;
+    position: relative; overflow: hidden;
+  }
+
+  .waiting-hero::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: var(--teal);
+  }
+
+  .hero-lbl {
+    font-size: 10px; font-weight: 600; letter-spacing: 0.12em;
+    color: var(--text-dimmer); text-transform: uppercase; margin-bottom: 8px;
+  }
+
+  .hero-number {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 96px; font-weight: 700; color: var(--text);
+    line-height: 1; letter-spacing: -6px;
+    transition: all 0.3s;
+  }
+
+  .hero-number .hp { font-size: 40px; color: var(--text-dim); letter-spacing: -2px; }
+
+  .hero-name { font-size: 14px; color: var(--text-dim); margin-top: 8px; }
+
+  .info-row {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  .info-card {
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 16px; text-align: center;
+  }
+
+  .info-card .ic-lbl {
+    font-size: 11px; color: var(--text-dim);
+    display: flex; align-items: center; justify-content: center; gap: 5px;
+    margin-bottom: 8px;
+  }
+
+  .info-card .ic-lbl i { font-size: 14px; }
+
+  .info-card .ic-val {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 36px; font-weight: 700; color: var(--text);
+    line-height: 1; letter-spacing: -1px;
+  }
+
+  .info-card .ic-unit { font-size: 14px; color: var(--text-dim); font-weight: 400; }
+  .info-card.mine-card { border-color: rgba(59,130,246,0.4); }
+  .info-card.mine-card .ic-val { color: #60A5FA; }
+  .info-card.wait-card .ic-val { color: var(--teal); }
+
+  .info-card .ic-sub { font-size: 11px; color: var(--text-dim); margin-top: 5px; }
+
+  /* ── AHEAD DOTS ── */
+  .ahead-card {
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 16px 18px;
+    margin-bottom: 16px;
+  }
+
+  .ahead-card .ac-lbl {
+    font-size: 11px; color: var(--text-dim); margin-bottom: 12px;
+    display: flex; align-items: center; gap: 6px;
+  }
+
+  .ahead-card .ac-lbl i { font-size: 14px; }
+
+  .dots-wrap { display: flex; flex-wrap: wrap; gap: 7px; }
+
+  .adot {
+    width: 34px; height: 34px; border-radius: 7px;
+    background: var(--bg-input);
+    border: 0.5px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 11px; font-weight: 700; color: var(--text-dim);
+    transition: all 0.25s;
+  }
+
+  .adot.d-current { background: var(--teal); color: var(--teal-text); border-color: transparent; }
+  .adot.d-mine { background: rgba(59,130,246,0.15); color: #60A5FA; border-color: rgba(59,130,246,0.4); }
+
+  /* ── FULL LIST ── */
+  .full-list-card {
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+  }
+
+  .full-list-header {
+    padding: 12px 16px;
+    border-bottom: 0.5px solid var(--border);
+    background: var(--bg-card2);
+  }
+
+  .full-list-items { padding: 10px; display: flex; flex-direction: column; gap: 6px; }
+
+  .list-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 9px 10px;
+    border-radius: var(--radius);
+    background: var(--bg-input);
+    border: 0.5px solid transparent;
+    transition: border-color 0.2s;
+  }
+
+  .list-item.li-mine { border-color: rgba(59,130,246,0.35); background: rgba(59,130,246,0.07); }
+  .list-item.li-current { border-color: var(--border-teal); background: var(--teal-dim); }
+
+  .li-name { flex: 1; font-size: 13px; color: var(--text); }
+  .li-mine-tag { font-size: 10px; color: #60A5FA; font-weight: 500; }
+
+  /* ── CALL FLASH OVERLAY ── */
+  .flash-overlay {
+    position: fixed; inset: 0;
+    background: rgba(11,17,32,0.85);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 999; opacity: 0; pointer-events: none;
+    transition: opacity 0.2s;
+  }
+
+  .flash-overlay.show { opacity: 1; }
+
+  .flash-box {
+    background: var(--bg-card);
+    border: 1px solid var(--border-teal);
+    border-radius: 18px; padding: 32px 48px;
+    text-align: center;
+    transform: scale(0.9);
+    transition: transform 0.2s;
+  }
+
+  .flash-overlay.show .flash-box { transform: scale(1); }
+
+  .flash-eyebrow {
+    font-size: 11px; font-weight: 600; letter-spacing: 0.14em;
+    color: var(--text-dimmer); text-transform: uppercase; margin-bottom: 8px;
+  }
+
+  .flash-token {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 72px; font-weight: 700; color: var(--teal);
+    line-height: 1; letter-spacing: -4px;
+  }
+
+  .flash-name { font-size: 14px; color: var(--text-dim); margin-top: 8px; }
+
+  /* ── TOAST ── */
+  .toast {
+    position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+    background: var(--bg-card);
+    border: 0.5px solid var(--border-teal);
+    border-radius: var(--radius); padding: 9px 20px;
+    font-size: 13px; color: var(--text);
+    z-index: 9999; opacity: 0; pointer-events: none;
+    transition: opacity 0.18s; white-space: nowrap;
+  }
+
+  .toast.show { opacity: 1; }
+
+  /* ── SCROLLBAR ── */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 600px) {
+    .header { padding: 0 16px; }
+    .panel { padding: 16px; }
+    .rx-grid { grid-template-columns: 1fr; }
+    .stats-row { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    .info-row { grid-template-columns: 1fr 1fr; }
+    .hero-number { font-size: 72px; }
+    .hero-number .hp { font-size: 30px; }
+    .logo-sub { display: none; }
+    #clock { min-width: auto; font-size: 12px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="logo">
+    <div class="logo-icon"><i class="ti ti-stethoscope" aria-hidden="true"></i></div>
+    Queue Cure
+    <span class="logo-sub">Dr.CURE</span>
+  </div>
+  <div class="header-right">
+    <div class="live-pill"><span class="live-dot"></span> Live</div>
+    <span id="clock"></span>
+  </div>
+</header>
+
+<div class="tabs" role="tablist">
+  <button class="tab-btn active" id="tab-rx" role="tab" aria-selected="true" onclick="switchTab('rx')">
+    <i class="ti ti-layout-dashboard" aria-hidden="true"></i> Receptionist
+  </button>
+  <button class="tab-btn" id="tab-pt" role="tab" aria-selected="false" onclick="switchTab('pt')">
+    <i class="ti ti-clock" aria-hidden="true"></i> Waiting Room
+  </button>
+</div>
+
+<!-- ════════════ RECEPTIONIST PANEL ════════════ -->
+<div class="panel active" id="panel-rx" role="tabpanel">
+
+  <div class="stats-row">
+    <div class="stat-card accent-teal">
+      <div class="s-val" id="s-current">—</div>
+      <div class="s-lbl">Serving now</div>
+    </div>
+    <div class="stat-card accent-amber">
+      <div class="s-val" id="s-waiting">0</div>
+      <div class="s-lbl">In queue</div>
+    </div>
+    <div class="stat-card">
+      <div class="s-val" id="s-done">0</div>
+      <div class="s-lbl">Seen today</div>
+    </div>
+  </div>
+
+  <div class="rx-grid">
+
+    <div class="card">
+      <div class="card-label">Now serving</div>
+      <div class="serving-display">
+        <span class="serving-prefix">T</span>
+        <span class="serving-num" id="rx-num">—</span>
+      </div>
+      <div class="serving-name" id="rx-name">Queue not started</div>
+      <button class="call-btn" id="call-btn" onclick="callNext()">
+        <i class="ti ti-player-skip-forward" aria-hidden="true"></i>
+        Call next token
+      </button>
+    </div>
+
+    <div class="card">
+      <div class="card-label">Settings</div>
+
+      <div class="form-group">
+        <div class="form-label">Avg. consultation time</div>
+        <div class="slider-row">
+          <input type="range" min="1" max="30" value="7" id="avg-slider" oninput="setAvg(this.value)" />
+          <span class="slider-val" id="avg-disp">7</span>
+          <span class="slider-unit">min</span>
+        </div>
+      </div>
+
+      <div style="border-top:0.5px solid var(--border);padding-top:14px;margin-top:2px;">
+        <div class="card-label" style="margin-bottom:10px;">Add patient</div>
+        <div class="form-group">
+          <div class="form-label">Name</div>
+          <input type="text" id="pt-name-inp" placeholder="type here" maxlength="40"
+            onkeydown="if(event.key==='Enter')addPatient()" />
+        </div>
+        <button class="add-btn" onclick="addPatient()">
+          <i class="ti ti-user-plus" aria-hidden="true"></i> Add to queue
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-label">Queue — all tokens today</div>
+  <div class="queue-wrap">
+    <table class="queue-table" aria-label="Queue">
+      <thead>
+        <tr>
+          <th style="width:64px">Token</th>
+          <th>Name</th>
+          <th style="width:80px">Status</th>
+          <th style="width:96px">Est. wait</th>
+        </tr>
+      </thead>
+      <tbody id="rx-tbody">
+        <tr><td colspan="4"><div class="empty-state"><i class="ti ti-users" aria-hidden="true"></i>No patients added yet</div></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ════════════ PATIENT PANEL ════════════ -->
+<div class="panel" id="panel-pt" role="tabpanel">
+
+  <div class="pov-row">
+    <span class="pov-lbl"><i class="ti ti-user" aria-hidden="true" style="font-size:14px;vertical-align:-2px;margin-right:3px;"></i>Your token</span>
+    <select id="pov-sel" onchange="render()" style="flex:1;max-width:240px;">
+      <option value="">— select to personalise —</option>
+    </select>
+    <div class="live-pill" style="font-size:10px;gap:5px;">
+      <span class="live-dot" style="width:5px;height:5px;"></span>Auto-sync
+    </div>
+  </div>
+
+  <div class="waiting-hero">
+    <div class="hero-lbl">Currently with doctor</div>
+    <div class="hero-number" id="pt-hero">
+      <span class="hp">T</span><span id="pt-hero-num">—</span>
+    </div>
+    <div class="hero-name" id="pt-hero-name">Waiting for queue to start</div>
+  </div>
+
+  <div class="info-row">
+    <div class="info-card mine-card">
+      <div class="ic-lbl"><i class="ti ti-ticket" aria-hidden="true"></i>Your token</div>
+      <div class="ic-val" id="pt-my-tok">—</div>
+      <div class="ic-sub" id="pt-my-name">Select above</div>
+    </div>
+    <div class="info-card wait-card">
+      <div class="ic-lbl"><i class="ti ti-hourglass" aria-hidden="true"></i>Est. wait</div>
+      <div class="ic-val"><span id="pt-wait">—</span><span class="ic-unit" id="pt-wait-unit"></span></div>
+      <div class="ic-sub" id="pt-ahead-txt"></div>
+    </div>
+  </div>
+
+  <div class="ahead-card">
+    <div class="ac-lbl"><i class="ti ti-list-numbers" aria-hidden="true"></i>Queue position</div>
+    <div class="dots-wrap" id="dots-wrap">
+      <div class="empty-state" style="width:100%;padding:10px 0;">
+        <i class="ti ti-clock" aria-hidden="true"></i>Queue is empty
+      </div>
+    </div>
+  </div>
+
+  <div class="full-list-card">
+    <div class="full-list-header">
+      <div class="section-label" style="margin:0;">All tokens today</div>
+    </div>
+    <div class="full-list-items" id="full-list">
+      <div class="empty-state"><i class="ti ti-users" aria-hidden="true"></i>No patients yet</div>
+    </div>
+  </div>
+</div>
+
+<!-- Flash overlay -->
+<div class="flash-overlay" id="flash-overlay" onclick="this.classList.remove('show')">
+  <div class="flash-box">
+    <div class="flash-eyebrow">Now calling</div>
+    <div class="flash-token" id="flash-tok">T01</div>
+    <div class="flash-name" id="flash-name-el"></div>
+    <div style="font-size:11px;color:var(--text-dimmer);margin-top:16px;">tap anywhere to dismiss</div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  /* ────────────────────────── STATE ────────────────────────── */
+  var state = {
+    nextToken: 1,
+    avgTime: 7,
+    patients: [],   /* {token, name, status:'waiting'|'current'|'done', calledAt?} */
+    doneList: []
+  };
+
+  /* ────────────────────────── UTILS ────────────────────────── */
+  function pad(n){ return n < 10 ? '0' + n : '' + n; }
+  function tok(n){ return 'T' + pad(n); }
+
+  function showToast(msg){
+    var el = document.getElementById('toast');
+    el.textContent = msg;
+    el.classList.add('show');
+    clearTimeout(showToast._t);
+    showToast._t = setTimeout(function(){ el.classList.remove('show'); }, 2400);
+  }
+
+  /* ────────────────────────── ACTIONS ────────────────────────── */
+  function addPatient(){
+    var inp = document.getElementById('pt-name-inp');
+    var name = inp.value.trim() || ('Patient ' + tok(state.nextToken));
+    var p = { token: state.nextToken++, name: name, status: 'waiting', joinedAt: Date.now() };
+    state.patients.push(p);
+    inp.value = '';
+    syncPovSelect();
+    render();
+    showToast(tok(p.token) + ' added — ' + p.name);
+  }
+
+  function callNext(){
+    var waiting = state.patients.filter(function(p){ return p.status === 'waiting'; });
+    if(!waiting.length){ showToast('No patients waiting'); return; }
+
+    /* close current */
+    var cur = state.patients.find(function(p){ return p.status === 'current'; });
+    if(cur){
+      cur.status = 'done';
+      state.doneList.push(cur);
+      var idx = state.patients.indexOf(cur);
+      state.patients.splice(idx, 1);
+    }
+
+    /* call next waiting */
+    var next = state.patients.find(function(p){ return p.status === 'waiting'; });
+    if(next){
+      next.status = 'current';
+      next.calledAt = Date.now();
+      flashCall(next);
+    }
+    render();
+  }
+
+  function setAvg(val){
+    state.avgTime = parseInt(val);
+    document.getElementById('avg-disp').textContent = val;
+    render();
+  }
+
+  /* ────────────────────────── WAIT CALC ────────────────────────── */
+  function waitForPatient(p){
+    if(p.status !== 'waiting') return null;
+    var waiting = state.patients.filter(function(x){ return x.status === 'waiting'; });
+    var pos = waiting.indexOf(p);
+    if(pos < 0) return null;
+    var cur = state.patients.find(function(x){ return x.status === 'current'; });
+    var timeSpent = (cur && cur.calledAt) ? Math.floor((Date.now() - cur.calledAt) / 60000) : 0;
+    var remCurrent = Math.max(0, state.avgTime - timeSpent);
+    return { wait: remCurrent + pos * state.avgTime, pos: pos };
+  }
+
+  /* ────────────────────────── FLASH ────────────────────────── */
+  function flashCall(p){
+    document.getElementById('flash-tok').textContent = tok(p.token);
+    document.getElementById('flash-name-el').textContent = p.name;
+    var ov = document.getElementById('flash-overlay');
+    ov.classList.add('show');
+    setTimeout(function(){ ov.classList.remove('show'); }, 2800);
+
+    /* flash number in RX panel */
+    var el = document.getElementById('rx-num');
+    el.classList.add('flash');
+    setTimeout(function(){ el.classList.remove('flash'); }, 600);
+  }
+
+  /* ────────────────────────── RENDER ────────────────────────── */
+  function render(){
+    var cur = state.patients.find(function(p){ return p.status === 'current'; });
+    var waiting = state.patients.filter(function(p){ return p.status === 'waiting'; });
+
+    /* stats */
+    document.getElementById('s-current').textContent = cur ? tok(cur.token) : '—';
+    document.getElementById('s-waiting').textContent = waiting.length;
+    document.getElementById('s-done').textContent = state.doneList.length;
+
+    /* RX serving */
+    document.getElementById('rx-num').textContent = cur ? pad(cur.token) : '—';
+    document.getElementById('rx-name').textContent = cur ? cur.name
+      : (state.doneList.length > 0 ? 'Queue paused' : 'Queue not started');
+
+    document.getElementById('call-btn').disabled = waiting.length === 0;
+
+    /* RX table */
+    var tbody = document.getElementById('rx-tbody');
+    var rows = (cur ? [cur] : []).concat(waiting).concat(state.doneList.slice(-4).reverse());
+    if(!rows.length){
+      tbody.innerHTML = '<tr><td colspan="4"><div class="empty-state"><i class="ti ti-users"></i>No patients added yet</div></td></tr>';
+    } else {
+      tbody.innerHTML = rows.map(function(p){
+        var waitStr = '—';
+        if(p.status === 'waiting'){
+          var w = waitForPatient(p);
+          waitStr = w ? (w.wait < 1 ? '&lt;1 min' : w.wait + ' min') : '—';
+        } else if(p.status === 'current'){
+          waitStr = 'In consult';
+        } else {
+          waitStr = 'Done';
+        }
+        var bc = p.status === 'current' ? 'b-current' : p.status === 'done' ? 'b-done' : 'b-waiting';
+        var cc = p.status === 'current' ? 'chip-in' : p.status === 'done' ? 'chip-done' : 'chip-wait';
+        var ct = p.status === 'current' ? 'In room' : p.status === 'done' ? 'Done' : 'Waiting';
+        var rc = p.status === 'current' ? 'row-current' : p.status === 'done' ? 'row-done' : '';
+        return '<tr class="' + rc + '">'
+          + '<td><span class="token-badge ' + bc + '">' + tok(p.token) + '</span></td>'
+          + '<td style="color:var(--text)">' + p.name + '</td>'
+          + '<td><span class="chip ' + cc + '">' + ct + '</span></td>'
+          + '<td style="color:var(--text-dim);font-size:12px;">' + waitStr + '</td>'
+          + '</tr>';
+      }).join('');
+    }
+
+    renderPatient();
+  }
+
+  function renderPatient(){
+    var cur = state.patients.find(function(p){ return p.status === 'current'; });
+    var waiting = state.patients.filter(function(p){ return p.status === 'waiting'; });
+
+    /* hero */
+    document.getElementById('pt-hero-num').textContent = cur ? pad(cur.token) : '—';
+    document.getElementById('pt-hero-name').textContent = cur ? cur.name
+      : (state.doneList.length > 0 ? 'Preparing for next patient' : 'Waiting for queue to start');
+
+    /* POV */
+    var povSel = document.getElementById('pov-sel');
+    var myTok = povSel.value ? parseInt(povSel.value) : null;
+    var myP = myTok ? (state.patients.find(function(p){ return p.token === myTok; })
+      || state.doneList.find(function(p){ return p.token === myTok; })) : null;
+
+    if(myP){
+      document.getElementById('pt-my-tok').textContent = tok(myP.token);
+      document.getElementById('pt-my-name').textContent = myP.name;
+      if(myP.status === 'current'){
+        document.getElementById('pt-wait').textContent = '🎉';
+        document.getElementById('pt-wait-unit').textContent = '';
+        document.getElementById('pt-ahead-txt').textContent = 'Your turn — please go in';
+      } else if(myP.status === 'done'){
+        document.getElementById('pt-wait').textContent = 'Done';
+        document.getElementById('pt-wait-unit').textContent = '';
+        document.getElementById('pt-ahead-txt').textContent = 'Consultation complete';
+      } else {
+        var w = waitForPatient(myP);
+        if(w){
+          document.getElementById('pt-wait').textContent = w.wait < 1 ? '<1' : w.wait;
+          document.getElementById('pt-wait-unit').textContent = ' min';
+          var ahead = w.pos + (cur ? 1 : 0);
+          document.getElementById('pt-ahead-txt').textContent = ahead + (ahead === 1 ? ' person' : ' people') + ' ahead';
+        }
+      }
+    } else {
+      document.getElementById('pt-my-tok').textContent = '—';
+      document.getElementById('pt-my-name').textContent = 'Select above';
+      document.getElementById('pt-wait').textContent = '—';
+      document.getElementById('pt-wait-unit').textContent = '';
+      document.getElementById('pt-ahead-txt').textContent = '';
+    }
+
+    /* dots */
+    var active = (cur ? [cur] : []).concat(waiting);
+    var dotsWrap = document.getElementById('dots-wrap');
+    if(!active.length){
+      dotsWrap.innerHTML = '<div class="empty-state" style="width:100%;padding:10px 0;"><i class="ti ti-clock"></i>Queue is empty</div>';
+    } else {
+      dotsWrap.innerHTML = active.map(function(p){
+        var cls = 'adot';
+        if(p.status === 'current') cls += ' d-current';
+        if(myTok && p.token === myTok) cls += ' d-mine';
+        return '<div class="' + cls + '" title="' + p.name + '">' + pad(p.token) + '</div>';
+      }).join('');
+    }
+
+    /* full list */
+    var allP = state.patients.concat(state.doneList.slice(-6).reverse());
+    var fl = document.getElementById('full-list');
+    if(!allP.length){
+      fl.innerHTML = '<div class="empty-state"><i class="ti ti-users"></i>No patients yet</div>';
+    } else {
+      fl.innerHTML = allP.map(function(p){
+        var bc = p.status === 'current' ? 'b-current' : p.status === 'done' ? 'b-done' : 'b-waiting';
+        var cc = p.status === 'current' ? 'chip-in' : p.status === 'done' ? 'chip-done' : 'chip-wait';
+        var ct = p.status === 'current' ? 'In room' : p.status === 'done' ? 'Done' : 'Waiting';
+        var isMine = myTok && p.token === myTok;
+        var isCur = p.status === 'current';
+        var liCls = 'list-item' + (isMine ? ' li-mine' : '') + (isCur ? ' li-current' : '');
+        return '<div class="' + liCls + '">'
+          + '<span class="token-badge ' + bc + '">' + tok(p.token) + '</span>'
+          + '<span class="li-name">' + p.name + (isMine ? ' <span class="li-mine-tag">← you</span>' : '') + '</span>'
+          + '<span class="chip ' + cc + '">' + ct + '</span>'
+          + '</div>';
+      }).join('');
+    }
+  }
+
+  function syncPovSelect(){
+    var sel = document.getElementById('pov-sel');
+    var prev = sel.value;
+    var all = state.patients.concat(state.doneList);
+    sel.innerHTML = '<option value="">— select to personalise —</option>'
+      + all.map(function(p){
+          return '<option value="' + p.token + '">' + tok(p.token) + ' — ' + p.name + '</option>';
+        }).join('');
+    if(prev) sel.value = prev;
+  }
+
+  function switchTab(t){
+    document.querySelectorAll('.tab-btn').forEach(function(b){ b.classList.remove('active'); b.setAttribute('aria-selected','false'); });
+    document.querySelectorAll('.panel').forEach(function(p){ p.classList.remove('active'); });
+    document.getElementById('tab-' + t).classList.add('active');
+    document.getElementById('tab-' + t).setAttribute('aria-selected','true');
+    document.getElementById('panel-' + t).classList.add('active');
+  }
+
+  /* ── clock ── */
+  function tick(){
+    document.getElementById('clock').textContent = new Date().toLocaleTimeString('en-IN',
+      { hour:'2-digit', minute:'2-digit', second:'2-digit' });
+  }
+  tick(); setInterval(tick, 1000);
+
+  /* ── refresh wait times every 30s ── */
+  setInterval(function(){
+    if(state.patients.find(function(p){ return p.status==='current'; })) render();
+  }, 30000);
+
+  /* ── seed demo data ── */
+  (function seed(){
+    var names = ['Priya Sharma','Ravi Kumar','Anjali Singh','Mohan Das','Sunita Rao','Deepak Verma'];
+    names.forEach(function(n){
+      state.patients.push({ token: state.nextToken++, name: n, status: 'waiting', joinedAt: Date.now() });
+    });
+    state.doneList.push({ token: 0, name: 'Kavita Patel', status: 'done' });
+    syncPovSelect();
+    render();
+  })();
+</script>
+</body>
+</html>
